@@ -142,7 +142,7 @@ class TapLinuxSDK(TapSDKBase):
             if tapcode in [2, 4]:
                 self.on_air_gesture(identifier, [tapcode + 10])
         elif self.tap_event_cb:
-            self.tap_event_cb(self.address, identifier, *args)
+            self.tap_event_cb(self.loop, self.address, identifier, *args)
 
     def on_raw_data(self, identifier, data):
         if self.raw_data_event_cb:
