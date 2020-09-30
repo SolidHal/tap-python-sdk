@@ -133,7 +133,7 @@ class TapLinuxSDK(TapSDKBase):
     def on_moused(self, identifier, data):
         if self.mouse_event_cb:
             args = parsers.mouse_data_msg(data)
-            self.mouse_event_cb(identifier, *args)
+            self.mouse_event_cb(self.address, identifier, *args)
 
     def on_tapped(self, identifier, data):
         args = parsers.tap_data_msg(data)
@@ -142,21 +142,21 @@ class TapLinuxSDK(TapSDKBase):
             if tapcode in [2, 4]:
                 self.on_air_gesture(identifier, [tapcode + 10])
         elif self.tap_event_cb:
-            self.tap_event_cb(identifier, *args)
+            self.tap_event_cb(self.address, identifier, *args)
 
     def on_raw_data(self, identifier, data):
         if self.raw_data_event_cb:
             args = parsers.raw_data_msg(data)
-            self.raw_data_event_cb(identifier, args)
+            self.raw_data_event_cb(self.address, identifier, args)
 
     def on_air_gesture(self, identifier, data):
         if data[0] == 0x14:  # mouse mode event
             self.mouse_mode = MouseModes(data[1])
             if self.air_gesture_state_event_cb:
-                self.air_gesture_state_event_cb(identifier, self.mouse_mode == MouseModes.AIR_MOUSE)
+                self.air_gesture_state_event_cb(self.address, identifier, self.mouse_mode == MouseModes.AIR_MOUSE)
         elif self.air_gesture_event_cb:
             args = parsers.air_gesture_data_msg(data)
-            self.air_gesture_event_cb(identifier, *args)
+            self.air_gesture_event_cb(self.address, identifier, *args)
 
     async def send_vibration_sequence(self, sequence: list, identifier=None):
         if len(sequence) > 18:
